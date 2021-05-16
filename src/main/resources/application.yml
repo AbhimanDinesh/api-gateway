@@ -1,0 +1,55 @@
+spring:
+   application:
+      name: api-gateway
+   cloud:
+      gateway:
+         httpClient:
+            connect-timeout: 10000
+            response-timeout: 10s
+         globalcors:
+            cors-configurations:
+               '[/**]':
+                  allowedOrigins:
+                  - http://localhost:3000
+                  - http://localhost:4200
+                  allowedMethods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+         routes:
+         -  id: customer-detail-service
+            uri: http://localhost:8082
+            predicates:
+            - Path=/customers/**
+         -  id: products-catelog-service
+            uri: http://localhost:8084
+            predicates:
+            - Path=/products/**
+
+
+server:
+   port: 9898
+
+
+management:
+   endpoints:
+      enabled-by-default: false
+      jmx:
+         exposure:
+            include: configprops,gateway,health,info,metrics
+      web:
+         exposure:
+            include: configprops,gateway,health,info,metrics
+   endpoint:
+      configprops:
+         enabled: true
+      gateway:
+         enabled: true
+      health:
+         enabled: true
+         show-details: always
+      info:
+         enabled: true
+      metrics:
+         enabled: true
